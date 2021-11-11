@@ -47,7 +47,7 @@ export class PipelineStack extends Stack {
     this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
 
     this.pipeline.addStage({
-      stageName: "Build",
+      stageName: "CDK_Build",
       actions: [
         new CodeBuildAction({
           actionName: "CDK_Build",
@@ -61,7 +61,13 @@ export class PipelineStack extends Stack {
               "build-specs/cdk-build-spec.yml"
             ),
           }),
-        }),
+        })
+      ]
+    });
+
+    this.pipeline.addStage({
+      stageName: 'Service_Build',
+      actions: [
         new CodeBuildAction({
           actionName: "Service_Build",
           input: serviceSourceOutput,
@@ -76,7 +82,7 @@ export class PipelineStack extends Stack {
           }),
         })
       ]
-    });
+    })
 
     this.pipeline.addStage({
       stageName: "Pipeline_Update",

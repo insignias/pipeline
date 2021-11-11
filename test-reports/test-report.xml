@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="2" failures="0" errors="0" time="7.828">
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T06:12:31" time="4.105" tests="1">
-    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.02">
+<testsuites name="jest tests" tests="2" failures="0" errors="0" time="4.459">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T06:20:05" time="3.926" tests="1">
+    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.008">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T06:12:31" time="7.417" tests="1">
-    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.008">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T06:20:05" time="4.014" tests="1">
+    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.022">
     </testcase>
   </testsuite>
 </testsuites>
