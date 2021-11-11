@@ -7,6 +7,7 @@ import { Construct } from 'constructs';
 export class PipelineStack extends Stack {
   private pipeline: Pipeline;
   private cdkBuildOutput: Artifact;
+  private serviceBuildOutput: Artifact;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -18,6 +19,7 @@ export class PipelineStack extends Stack {
     });
 
     const cdkSourceOutput = new Artifact("CDKSourceOutput");
+    const serviceSourceOutput = new Artifact("ServiceSourceOutput");
 
     this.pipeline.addStage({
       stageName: "Source",
@@ -29,11 +31,20 @@ export class PipelineStack extends Stack {
           actionName: "Pipeline_Source",
           oauthToken: SecretValue.secretsManager("github-token"),
           output: cdkSourceOutput,
+        }),
+        new GitHubSourceAction({
+          owner: "insignias",
+          repo: "express-lambda",
+          branch: "main",
+          actionName: "Service_Source",
+          oauthToken: SecretValue.secretsManager("github-token"),
+          output: serviceSourceOutput,
         })
       ]
     });
 
     this.cdkBuildOutput = new Artifact("CdkBuildOutput");
+    this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
 
     this.pipeline.addStage({
       stageName: "Build",
@@ -43,6 +54,19 @@ export class PipelineStack extends Stack {
           input: cdkSourceOutput,
           outputs: [this.cdkBuildOutput],
           project: new PipelineProject(this, "CdkBuildProject", {
+            environment: {
+              buildImage: LinuxBuildImage.STANDARD_5_0,
+            },
+            buildSpec: BuildSpec.fromSourceFilename(
+              "build-specs/cdk-build-spec.yml"
+            ),
+          }),
+        }),
+        new CodeBuildAction({
+          actionName: "Service_Build",
+          input: serviceSourceOutput,
+          outputs: [this.serviceBuildOutput],
+          project: new PipelineProject(this, "ServiceBuildProject", {
             environment: {
               buildImage: LinuxBuildImage.STANDARD_5_0,
             },
