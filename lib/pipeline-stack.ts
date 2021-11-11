@@ -3,6 +3,7 @@ import { BuildSpec, LinuxBuildImage, PipelineProject } from 'aws-cdk-lib/lib/aws
 import { Artifact, Pipeline } from 'aws-cdk-lib/lib/aws-codepipeline';
 import { CloudFormationCreateUpdateStackAction, CodeBuildAction, GitHubSourceAction } from 'aws-cdk-lib/lib/aws-codepipeline-actions';
 import { Construct } from 'constructs';
+import { ServiceStack } from './service-stack';
 
 export class PipelineStack extends Stack {
   private pipeline: Pipeline;
@@ -97,5 +98,23 @@ export class PipelineStack extends Stack {
         }),
       ],
     });
+  }
+
+  public createServiceStage(serviceStack: ServiceStack, stageName: string) {
+    this.pipeline.addStage({
+      stageName: stageName,
+      actions: [
+        new CloudFormationCreateUpdateStackAction({
+          actionName: 'Service_Update',
+          stackName: serviceStack.stackName,
+          templatePath: this.cdkBuildOutput.atPath(`${serviceStack.stackName}.template.json`),
+          adminPermissions: true,
+          parameterOverrides: {
+            ...serviceStack.serviceCode.assign(this.serviceBuildOutput.s3Location)
+          },
+          extraInputs: [this.serviceBuildOutput]
+        })
+      ]
+    })
   }
 }

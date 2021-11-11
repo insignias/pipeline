@@ -1,11 +1,12 @@
-import * as cdk from 'aws-cdk-lib';
-import * as Service from '../lib/service-stack';
+import { App} from 'aws-cdk-lib';
+import { ServiceStack} from '../lib/service-stack';
 import { SynthUtils} from '@aws-cdk/assert';
 
-test('PipelineStack', () => {
-    const app = new cdk.App();
+test('ServiceStackTest', () => {
+    const app = new App();
     // WHEN
-    const stack = new Service.ServiceStack(app, 'PipelineStack');
+    const stack1 = new ServiceStack(app, 'ServiceStackTest');
     // THEN
-    expect(SynthUtils.toCloudFormation).toMatchSnapshot();
+    // expect(SynthUtils.toCloudFormation(stack1)
+    // expect(SynthUtils.toCloudFormation).toMatchSnapshot();
 });
