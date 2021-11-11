@@ -23,9 +23,9 @@ export class PipelineStack extends Stack {
       stageName: "Source",
       actions: [
         new GitHubSourceAction({
-          owner: "Gtofig",
-          repo: "aws-pipeline",
-          branch: "master",
+          owner: "insignias",
+          repo: "pipeline",
+          branch: "main",
           actionName: "Pipeline_Source",
           oauthToken: SecretValue.secretsManager("github-token"),
           output: cdkSourceOutput,
