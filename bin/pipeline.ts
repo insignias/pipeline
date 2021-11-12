@@ -6,11 +6,12 @@ import { ServiceStack } from '../lib/service-stack';
 import { BillingStack } from '../lib/billing-stack';
 
 const app = new cdk.App();
-new BillingStack(app, 'BillingStack', {
+const billingStack = new BillingStack(app, 'BillingStack', {
   amount: 5,
   emailAddress: 'sharan.samir@gmail.com'
 });
 
 const pipeline = new PipelineStack(app, 'PipelineStack', {});
 const serviceStackProd = new ServiceStack(app, 'ServiceStackProd', {});
-pipeline.createServiceStage(serviceStackProd, 'Prod');
+const stage = pipeline.createServiceStage(serviceStackProd, 'Prod');
+pipeline.addBillingStacktoStage(billingStack, stage);
