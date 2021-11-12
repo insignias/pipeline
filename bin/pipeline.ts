@@ -7,7 +7,7 @@ import { BillingStack } from '../lib/billing-stack';
 
 const app = new cdk.App();
 const billingStack = new BillingStack(app, 'BillingStack', {
-  amount: 5,
+  amount: 10,
   emailAddress: 'sharan.samir@gmail.com'
 });
 
