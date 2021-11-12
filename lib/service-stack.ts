@@ -1,6 +1,7 @@
 import { CfnParameter, Stack, StackProps } from "aws-cdk-lib";
-import { CfnApi } from "aws-cdk-lib/lib/aws-apigatewayv2";
-import { CfnParametersCode, Code, Function, Runtime } from "aws-cdk-lib/lib/aws-lambda";
+import { CfnApi, CfnIntegration, HttpApi } from "aws-cdk-lib/lib/aws-apigatewayv2";
+import { LambdaProxyIntegration } from "aws-cdk-lib/lib/aws-apigatewayv2-integrations";
+import { CfnParametersCode, CfnPermission, Code, Function, Runtime } from "aws-cdk-lib/lib/aws-lambda";
 import { Construct } from "constructs";
 
 export class ServiceStack extends Stack {
@@ -18,16 +19,25 @@ export class ServiceStack extends Stack {
             functionName: 'ServiceLambda'
         })
 
-        new CfnApi(this, 'ServiceApi', {
-            protocolType: 'HTTP',
-            name: 'ServiceApi',
-            target: lambda.functionArn
-        })
-        // new HttpApi(this, 'ServiceApi', {
-        //     defaultIntegration: new LambdaProxyIntegration({
-        //         handler: lambda
-        //     }),
-        //     apiName: 'MyService'
+        // const api = new CfnApi(this, 'ServiceApi', {
+        //     protocolType: 'HTTP',
+        //     name: 'ServiceApi',
+        //     target: lambda.functionArn
+        // });
+
+        // const permission = new CfnPermission(this, 'lambdaPermission', {
+        //     functionName: lambda.functionArn,
+        //     action: 'lambda:InvokeFunction',
+        //     principal: 'apigateway.amazonaws.com',
+        //     sourceArn: api.
         // })
+
+        
+        new HttpApi(this, 'ServiceApi', {
+            defaultIntegration: new LambdaProxyIntegration({
+                handler: lambda
+            }),
+            apiName: 'MyService'
+        })
     }
 }

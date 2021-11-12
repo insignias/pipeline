@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="3" failures="0" errors="0" time="9.047">
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T21:41:35" time="4.134" tests="1">
-    <testcase classname=" BillingStack" name=" BillingStack" time="0.004">
+<testsuites name="jest tests" tests="3" failures="0" errors="0" time="6.711">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-12T15:24:19" time="2.978" tests="1">
+    <testcase classname=" BillingStack" name=" BillingStack" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T21:41:35" time="7.879" tests="1">
-    <testcase classname=" ServiceStackTest" name=" ServiceStackTest" time="0.008">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-12T15:24:19" time="3.52" tests="1">
+    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.018">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-11T21:41:35" time="8.536" tests="1">
-    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.024">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-12T15:24:19" time="6.262" tests="1">
+    <testcase classname=" ServiceStackTest" name=" ServiceStackTest" time="0.01">
     </testcase>
   </testsuite>
 </testsuites>
