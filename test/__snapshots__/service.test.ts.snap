@@ -13,7 +13,7 @@ Object {
   "Resources": Object {
     "ServiceApi4633ACD6": Object {
       "Properties": Object {
-        "Name": "MyService",
+        "Name": "MyServicedummy",
         "ProtocolType": "HTTP",
       },
       "Type": "AWS::ApiGatewayV2::Api",
@@ -115,7 +115,7 @@ Object {
             "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA",
           },
         },
-        "FunctionName": "ServiceLambda",
+        "FunctionName": "ServiceLambdadummy",
         "Handler": "src/lambda.handler",
         "Role": Object {
           "Fn::GetAtt": Array [

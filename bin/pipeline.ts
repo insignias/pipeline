@@ -12,6 +12,11 @@ const billingStack = new BillingStack(app, 'BillingStack', {
 });
 
 const pipeline = new PipelineStack(app, 'PipelineStack', {});
-const serviceStackProd = new ServiceStack(app, 'ServiceStackProd', {});
-const stage = pipeline.createServiceStage(serviceStackProd, 'Prod');
-pipeline.addBillingStacktoStage(billingStack, stage);
+
+const serviceStackTest = new ServiceStack(app, 'ServiceStackTest', {stageName: 'Test'});
+const serviceStackProd = new ServiceStack(app, 'ServiceStackProd', {stageName: 'Prod'});
+
+const testStage = pipeline.createServiceStage(serviceStackTest, 'Test');
+const prodStage = pipeline.createServiceStage(serviceStackProd, 'Prod');
+
+pipeline.addBillingStacktoStage(billingStack, prodStage);

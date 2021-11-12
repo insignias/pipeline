@@ -17,9 +17,9 @@ test('PipelineStack', () => {
 test('Adding New Stage', () => {
     //GIVEN
     const app = new App();
-    //WHEN
-    const ServiceTestStack = new ServiceStack(app, 'ServiceTestStack');
+    const ServiceTestStack = new ServiceStack(app, 'ServiceTestStack', {stageName: 'dummy'});
     const PipelineTestStack = new Pipeline.PipelineStack(app, 'PipelineTestStack');
+    //WHEN
     PipelineTestStack.createServiceStage(ServiceTestStack, 'Test');
     //THEN
     expectCDK(PipelineTestStack).to(haveResourceLike('AWS::CodePipeline::Pipeline', {
@@ -32,7 +32,7 @@ test('Adding New Stage', () => {
 test('Adding BillingStack to Prod Stage', () => {
     //GIVEN
     const app = new App();
-    const ServiceTestStack = new ServiceStack(app, 'ServiceTestStack');
+    const ServiceTestStack = new ServiceStack(app, 'ServiceTestStack', {stageName: 'dummy'});
     const PipelineTestStack = new Pipeline.PipelineStack(app, 'PipelineTestStack');
     const BillingTestStack = new BillingStack(app, 'BillingTestStack', {
         amount: 1,
