@@ -1,0 +1,163 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceStackTest 1`] = `
+Object {
+  "Parameters": Object {
+    "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3": Object {
+      "Type": "String",
+    },
+    "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA": Object {
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "ServiceApi4633ACD6": Object {
+      "Properties": Object {
+        "Name": "MyService",
+        "ProtocolType": "HTTP",
+      },
+      "Type": "AWS::ApiGatewayV2::Api",
+    },
+    "ServiceApiDefaultRoute1D980EEE": Object {
+      "Properties": Object {
+        "ApiId": Object {
+          "Ref": "ServiceApi4633ACD6",
+        },
+        "AuthorizationType": "NONE",
+        "RouteKey": "$default",
+        "Target": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "integrations/",
+              Object {
+                "Ref": "ServiceApiDefaultRouteHttpIntegration017fdbd76b07f361329d8f77e9cebcdb4F69854C",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::ApiGatewayV2::Route",
+    },
+    "ServiceApiDefaultRouteHttpIntegration017fdbd76b07f361329d8f77e9cebcdb4F69854C": Object {
+      "Properties": Object {
+        "ApiId": Object {
+          "Ref": "ServiceApi4633ACD6",
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": Object {
+          "Fn::GetAtt": Array [
+            "ServiceLambdaA7DE4D2C",
+            "Arn",
+          ],
+        },
+        "PayloadFormatVersion": "2.0",
+      },
+      "Type": "AWS::ApiGatewayV2::Integration",
+    },
+    "ServiceApiDefaultRouteServiceStackTestServiceApiDefaultRouteF560CF2APermission2ACE02F1": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "ServiceLambdaA7DE4D2C",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "ServiceApi4633ACD6",
+              },
+              "/*/*",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "ServiceApiDefaultStage0A39469D": Object {
+      "Properties": Object {
+        "ApiId": Object {
+          "Ref": "ServiceApi4633ACD6",
+        },
+        "AutoDeploy": true,
+        "StageName": "$default",
+      },
+      "Type": "AWS::ApiGatewayV2::Stage",
+    },
+    "ServiceLambdaA7DE4D2C": Object {
+      "DependsOn": Array [
+        "ServiceLambdaServiceRoleF5A50FBC",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3",
+          },
+          "S3Key": Object {
+            "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA",
+          },
+        },
+        "FunctionName": "ServiceLambda",
+        "Handler": "src/lambda.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "ServiceLambdaServiceRoleF5A50FBC",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "ServiceLambdaServiceRoleF5A50FBC": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+}
+`;

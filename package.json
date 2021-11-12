@@ -22,9 +22,10 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/assert": "^1.132.0",
-    "aws-cdk-lib": "2.0.0-alpha.4",
-    "constructs": "10.0.0-pre.5",
+    "@aws-cdk/assert": "^2.0.0-rc.29",
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.0.0-alpha.6",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.0.0-alpha.6",
+    "aws-cdk-lib": "v2.0.0-rc.29",
     "source-map-support": "^0.5.16"
   }
 }

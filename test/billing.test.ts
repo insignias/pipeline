@@ -10,5 +10,5 @@ test('BillingStack', () => {
         emailAddress: 'sharan.samir@gmail.com'
     });
     // THEN
-    // expect(SynthUtils.toCloudFormation(stack)
+    expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
 });
