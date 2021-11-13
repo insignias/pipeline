@@ -2,6 +2,20 @@
 
 exports[`ServiceStackTest 1`] = `
 Object {
+  "Outputs": Object {
+    "ServiceEndpoint": Object {
+      "Description": "ServiceEndpoint",
+      "Export": Object {
+        "Name": "ServiceEndpoint",
+      },
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "ServiceApi4633ACD6",
+          "ApiEndpoint",
+        ],
+      },
+    },
+  },
   "Parameters": Object {
     "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3": Object {
       "Type": "String",

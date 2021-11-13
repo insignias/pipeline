@@ -40,7 +40,7 @@ test('Adding BillingStack to Prod Stage', () => {
     });
     const stage = PipelineTestStack.createServiceStage(ServiceTestStack, 'Test');
     //WHEN
-    PipelineTestStack.addBillingStackToStage(BillingTestStack, stage);
+    PipelineTestStack.addBillingStacktoStage(BillingTestStack, stage);
     //THEN
     expectCDK(PipelineTestStack).to(haveResourceLike('AWS::CodePipeline::Pipeline', {
         Stages: arrayWith(objectLike({
