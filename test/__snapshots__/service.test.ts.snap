@@ -6,7 +6,7 @@ Object {
     "ServiceEndpoint": Object {
       "Description": "ServiceEndpoint",
       "Export": Object {
-        "Name": "ServiceEndpoint",
+        "Name": "ServiceEndpointdummy",
       },
       "Value": Object {
         "Fn::GetAtt": Array [

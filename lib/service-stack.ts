@@ -32,7 +32,7 @@ export class ServiceStack extends Stack {
         });
 
         this.serviceEndpointOutput = new CfnOutput(this, 'ServiceEndpoint', {
-            exportName: 'ServiceEndpoint',
+            exportName: `ServiceEndpoint${props.stageName}`,
             value: httpApi.apiEndpoint,
             description: 'ServiceEndpoint'
         })
