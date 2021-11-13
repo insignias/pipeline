@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { CfnParametersCode, Code, Function, Runtime } from "aws-cdk-lib/lib/aws-lambda";
 import { Construct } from "constructs";
 import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
@@ -10,6 +10,7 @@ interface ServiceStackProps extends StackProps {
 
 export class ServiceStack extends Stack {
     public readonly serviceCode: CfnParametersCode;
+    public readonly serviceEndpointOutput: CfnOutput;
 
     constructor(scope: Construct, id: string, props: ServiceStackProps) {
         super(scope, id, props);
@@ -23,11 +24,17 @@ export class ServiceStack extends Stack {
             functionName: `ServiceLambda${props.stageName}`
         });
         
-        new HttpApi(this, 'ServiceApi', {
+        const httpApi = new HttpApi(this, 'ServiceApi', {
             defaultIntegration: new LambdaProxyIntegration({
                 handler: lambda
             }),
             apiName: `MyService${props?.stageName}`
         });
+
+        this.serviceEndpointOutput = new CfnOutput(this, 'ServiceEndpoint', {
+            exportName: 'ServiceEndpoint',
+            value: httpApi.apiEndpoint,
+            description: 'ServiceEndpoint'
+        })
     }
 }
