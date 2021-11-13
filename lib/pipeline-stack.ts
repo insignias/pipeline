@@ -1,8 +1,7 @@
 import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
 import { BuildSpec, LinuxBuildImage, PipelineProject } from 'aws-cdk-lib/lib/aws-codebuild';
 import { Artifact, IStage, Pipeline } from 'aws-cdk-lib/lib/aws-codepipeline';
-import { CloudFormationCreateUpdateStackAction, CodeBuildAction, GitHubSourceAction } from 'aws-cdk-lib/lib/aws-codepipeline-actions';
-import { Stage } from 'aws-cdk-lib/lib/aws-codepipeline/lib/private/stage';
+import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'aws-cdk-lib/lib/aws-codepipeline-actions';
 import { Construct } from 'constructs';
 import { BillingStack } from './billing-stack';
 import { ServiceStack } from './service-stack';
@@ -50,7 +49,7 @@ export class PipelineStack extends Stack {
     this.serviceBuildOutput = new Artifact("ServiceBuildOutput");
 
     this.pipeline.addStage({
-      stageName: "CDK_Build",
+      stageName: "Build",
       actions: [
         new CodeBuildAction({
           actionName: "CDK_Build",
@@ -64,13 +63,7 @@ export class PipelineStack extends Stack {
               "build-specs/cdk-build-spec.yml"
             ),
           }),
-        })
-      ]
-    });
-
-    this.pipeline.addStage({
-      stageName: 'Service_Build',
-      actions: [
+        }),
         new CodeBuildAction({
           actionName: "Service_Build",
           input: serviceSourceOutput,
@@ -85,7 +78,26 @@ export class PipelineStack extends Stack {
           }),
         })
       ]
-    })
+    });
+
+    // this.pipeline.addStage({
+    //   stageName: 'Service_Build',
+    //   actions: [
+    //     new CodeBuildAction({
+    //       actionName: "Service_Build",
+    //       input: serviceSourceOutput,
+    //       outputs: [this.serviceBuildOutput],
+    //       project: new PipelineProject(this, "ServiceBuildProject", {
+    //         environment: {
+    //           buildImage: LinuxBuildImage.STANDARD_5_0,
+    //         },
+    //         buildSpec: BuildSpec.fromSourceFilename(
+    //           "build-specs/service-build-spec.yml"
+    //         ),
+    //       }),
+    //     })
+    //   ]
+    // })
 
     this.pipeline.addStage({
       stageName: "Pipeline_Update",
@@ -130,4 +142,28 @@ export class PipelineStack extends Stack {
       })
     )
   }
+
+  public addIntegrationTestToStage(stage: IStage, serviceEndpoint: string) {
+    stage.addAction(
+      new CodeBuildAction({
+        actionName: 'Integration_Test',
+        input: this.serviceBuildOutput,
+        project: new PipelineProject(this, 'Intergration_Test', {
+          environment: {
+            buildImage: LinuxBuildImage.STANDARD_5_0
+          },
+          buildSpec: BuildSpec.fromSourceFilename('build-spec/integ-test-build-spec.yml')
+        }),
+        environmentVariables: {
+          SERVICE_ENDPOINT: {
+            value: serviceEndpoint
+          }
+        },
+        type: CodeBuildActionType.TEST,
+        runOrder: 2
+      })
+    )
+  }
 }
+
+  
