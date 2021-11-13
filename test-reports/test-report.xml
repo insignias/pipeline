@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="5" failures="0" errors="0" time="4.456">
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-13T04:51:14" time="3.765" tests="1">
-    <testcase classname=" BillingStack" name=" BillingStack" time="0.028">
+<testsuites name="jest tests" tests="5" failures="0" errors="0" time="9.872">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-13T18:53:08" time="4.951" tests="1">
+    <testcase classname=" BillingStack" name=" BillingStack" time="0.044">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-13T04:51:14" time="3.849" tests="1">
-    <testcase classname=" ServiceStackTest" name=" ServiceStackTest" time="0.056">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-13T18:53:08" time="4.962" tests="1">
+    <testcase classname=" ServiceStackTest" name=" ServiceStackTest" time="0.058">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-13T04:51:14" time="4.051" tests="3">
-    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.02">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-11-13T18:53:08" time="9.373" tests="3">
+    <testcase classname=" PipelineStack" name=" PipelineStack" time="0.021">
     </testcase>
-    <testcase classname=" Adding New Stage" name=" Adding New Stage" time="0.145">
+    <testcase classname=" Adding New Stage" name=" Adding New Stage" time="0.133">
     </testcase>
-    <testcase classname=" Adding BillingStack to Prod Stage" name=" Adding BillingStack to Prod Stage" time="0.095">
+    <testcase classname=" Adding BillingStack to Prod Stage" name=" Adding BillingStack to Prod Stage" time="0.077">
     </testcase>
   </testsuite>
 </testsuites>

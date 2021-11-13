@@ -2,6 +2,11 @@ import { SecretValue, Stack, StackProps } from 'aws-cdk-lib';
 import { BuildSpec, LinuxBuildImage, PipelineProject } from 'aws-cdk-lib/lib/aws-codebuild';
 import { Artifact, IStage, Pipeline } from 'aws-cdk-lib/lib/aws-codepipeline';
 import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildActionType, GitHubSourceAction } from 'aws-cdk-lib/lib/aws-codepipeline-actions';
+import { EventField, RuleTargetInput } from 'aws-cdk-lib/lib/aws-events';
+import { SnsTopic } from 'aws-cdk-lib/lib/aws-events-targets';
+import { Sns } from 'aws-cdk-lib/lib/aws-ses-actions';
+import { Topic } from 'aws-cdk-lib/lib/aws-sns';
+import { EmailSubscription } from 'aws-cdk-lib/lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
 import { BillingStack } from './billing-stack';
 import { ServiceStack } from './service-stack';
@@ -10,9 +15,16 @@ export class PipelineStack extends Stack {
   private pipeline: Pipeline;
   private cdkBuildOutput: Artifact;
   private serviceBuildOutput: Artifact;
+  private pipelineNotificationTopic: Topic;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    this.pipelineNotificationTopic = new Topic(this, 'PipelineNotificationTopic', {
+      topicName: 'PipelineNotification'
+    })
+
+    this.pipelineNotificationTopic.addSubscription(new EmailSubscription('sharan.samir@gmail.com'));
 
     this.pipeline = new Pipeline(this, "Pipeline", {
       pipelineName: "Pipeline",
@@ -80,25 +92,6 @@ export class PipelineStack extends Stack {
       ]
     });
 
-    // this.pipeline.addStage({
-    //   stageName: 'Service_Build',
-    //   actions: [
-    //     new CodeBuildAction({
-    //       actionName: "Service_Build",
-    //       input: serviceSourceOutput,
-    //       outputs: [this.serviceBuildOutput],
-    //       project: new PipelineProject(this, "ServiceBuildProject", {
-    //         environment: {
-    //           buildImage: LinuxBuildImage.STANDARD_5_0,
-    //         },
-    //         buildSpec: BuildSpec.fromSourceFilename(
-    //           "build-specs/service-build-spec.yml"
-    //         ),
-    //       }),
-    //     })
-    //   ]
-    // })
-
     this.pipeline.addStage({
       stageName: "Pipeline_Update",
       actions: [
@@ -144,24 +137,37 @@ export class PipelineStack extends Stack {
   }
 
   public addIntegrationTestToStage(stage: IStage, serviceEndpoint: string) {
-    stage.addAction(
-      new CodeBuildAction({
-        actionName: 'Integration_Test',
-        input: this.serviceBuildOutput,
-        project: new PipelineProject(this, 'Intergration_Test', {
-          environment: {
-            buildImage: LinuxBuildImage.STANDARD_5_0
-          },
-          buildSpec: BuildSpec.fromSourceFilename('build-specs/integ-test-build-spec.yml')
-        }),
-        environmentVariables: {
-          SERVICE_ENDPOINT: {
-            value: serviceEndpoint
-          }
+    const integrationAction = new CodeBuildAction({
+      actionName: 'Integration_Test',
+      input: this.serviceBuildOutput,
+      project: new PipelineProject(this, 'Intergration_Test', {
+        environment: {
+          buildImage: LinuxBuildImage.STANDARD_5_0
         },
-        type: CodeBuildActionType.TEST,
-        runOrder: 2
-      })
+        buildSpec: BuildSpec.fromSourceFilename('build-specs/integ-test-build-spec.yml')
+      }),
+      environmentVariables: {
+        SERVICE_ENDPOINT: {
+          value: serviceEndpoint
+        }
+      },
+      type: CodeBuildActionType.TEST,
+      runOrder: 2
+    });
+
+    stage.addAction(integrationAction);
+    integrationAction.onStateChange('PipelineFailureNotification', new SnsTopic(this.pipelineNotificationTopic, {
+      message: RuleTargetInput.fromText(`Integration Test Failed, please see the link for details: ${EventField.fromPath("$.detail.execution-result.external-execution-url")}`)
+    }),
+    {
+      ruleName: 'IntegrationTestFailed',
+      eventPattern: {
+        detail: {
+          state: ["FAILED"]
+        }
+      },
+      description: 'Integration Test has failed'
+    }
     )
   }
 }
